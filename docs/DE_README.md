@@ -43,17 +43,38 @@ Nun kannst du auf alle coolen Funktionen der Bibliothek mit `shield.xxxxx` zugre
 
 `getPotiState()`: Gibt den aktuellen analogen Wert des Potentiometers zurück, der seine Drehposition widerspiegelt.
 
-`RGBLED(int red, int green, int blue)`: Legt die Farbe der RGB-LED fest, indem die Intensität der Rot-, Grün- und Blaukomponenten gesteuert wird. Die Parameter sind binär (0 oder 1) und geben an, ob jede Farbkomponente aus- oder eingeschaltet ist.
+`led.rgb(int red, int green, int blue)`: Legt die Farbe der RGB-LED fest, indem die Intensität der Rot-, Grün- und Blaukomponenten gesteuert wird. Die Parameter sind integers (0 bis 255).
 
-`getJoyStickState(int *x, int *y)`: Liest die aktuelle Position des Joysticks und gibt die x- und y-Koordinaten über Zeigerargumente zurück.
+`led.hex(int red, int green, int blue)`: Legt die Farbe der RGB-LED fest, indem die Intensität der Rot-, Grün- und Blaukomponenten gesteuert wird. Die Parameter sind hexadezimal (0x000000 bis 0xffffff) Die ersten zwei Ziffern stehen für rot die mittleren zwei für grün und die letzten zwei für blau.
 
-`clearSegment()`: Schaltet alle Segmente einer Segmentanzeige aus, um eine zuvor angezeigte Zahl oder ein Muster zu löschen.
+`joystick.getRaw(int *x, int *y)`: Reads the current position of the joystick and returns the x and y coordinates through pointer arguments.
 
-`printSegment(int number, bool point)`: Zeigt eine Ziffer (0-9) auf einer Segmentanzeige an und optional einen Dezimalpunkt. Der Parameter number gibt die Ziffer an, und der Parameter point gibt an, ob der Dezimalpunkt angezeigt werden soll.
+`joystick.x()`: Returns the x Position of the JoyStick
+
+`joystick.y()`: Returns the y Position of the JoyStick
+
+`segment.clear()`: Schaltet alle Segmente einer Segmentanzeige aus, um eine zuvor angezeigte Zahl oder ein Muster zu löschen.
+
+`segment.print(int number, bool point)`: Zeigt eine Ziffer (0-9) auf einer Segmentanzeige an und optional einen Dezimalpunkt. Der Parameter number gibt die Ziffer an, und der Parameter point gibt an, ob der Dezimalpunkt angezeigt werden soll.
+
+`segment.manual(int segment, bool state)`: Ändert eines der sieben (acht mit dem Punkt) Segmenten manuell um.
 
 `getButtonState(int number)`: Gibt den Zustand (HIGH oder LOW) eines bestimmten Knopfes zurück. Die Funktion behandelt vier Knöpfe, die durch Nummern 0 bis 3 identifiziert werden.
 
-## Beispiel:
+`buzzer.xxxxxxx()`: buzzer Funktionen sind sound Funktionen. Du kannst die Verschiedenen Funktionen in der Tabelle unten ablesen.
+
+| Name                     | Beschreibung                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| success()                | Ein schönes Geräusch des Erfolges!                                                                           |
+| error()                  | Ein Geräusch für kleine Fehler. Nichts schlimmes.                                                            |
+| reading()                | Ein Geräusch um den Benutzer bescheid zu geben, das gerade etwas gelesen wird. Könnte für NFC hilfreich sein |
+| understood()             | Das Gegenstück zu der reading() Funktion. Sagt dem Nutzer, dass alles verstanden wurde.                      |
+| criticalError()          | Ein Geräusch für GROßE Fehler, wie zum Beispiel ein kaputter Code oder Fehlende Datei.                       |
+| alarm()                  | Ein Geräusch, das jeden Dieb einschüchtert, der nur daran denkt deine wertvolle Platine zu klauen.           |
+| frequency(int frequency) | Eine Funktion, mit der du eine bestimmte Frequenz ausgeben kannst.                                           |
+| stop()                   | Die Langweiligste funktion... Die stoppt einfach die Sound Party!                                            |
+
+## Beispiele:
 
 Dies ist ein Beispiel für fast alles, was das Board anzeigen kann. Der Schalter auf der linken Seite ist für den Modus.
 
@@ -80,7 +101,7 @@ Die RGB-LED kann mit dem Joystick gesteuert werden.
 | Oben         | Weiß        |
 | Unten        | Blau        |
 | Rechts       | Rot         |
-| Links       | Grün        |
+| Links        | Grün        |
 
 ```c++
 

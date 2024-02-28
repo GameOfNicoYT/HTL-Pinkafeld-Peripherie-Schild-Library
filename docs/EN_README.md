@@ -43,15 +43,36 @@ Now you can get access to all the cool functions of the library with `shield.xxx
 
 `getPotiState()`: Returns the current analog reading from the potentiometer, reflecting its rotational position.
 
-`RGBLED(int red, int green, int blue)`: Sets the color of the RGB LED by controlling the intensity of red, green, and blue components. The parameters are binary (0 or 1), indicating off or on for each color component.
+`led.rgb(int red, int green, int blue)`: Sets the color of the RGB LED by controlling the intensity of red, green, and blue components. The parameters are integers (0 - 255).
 
-`getJoyStickState(int *x, int *y)`: Reads the current position of the joystick and returns the x and y coordinates through pointer arguments.
+`led.hex(unsigned long hex)`: Sets the color of the RGB LED by controlling the intensity of red, green, and blue components. The parameters are hex numbers (0x000000 - 0xffffff). The first two numbers are for the red the middle two are for green and the last are for blue.
 
-`clearSegment()`: Turns off all segments of a segment display to clear any previously displayed number or pattern.
+`joystick.getRaw(int *x, int *y)`: Reads the current position of the joystick and returns the x and y coordinates through pointer arguments.
 
-`printSegment(int number, bool point)`: Displays a digit (0-9) on a segment display and optionally a decimal point. The number parameter specifies the digit, and the point parameter indicates whether to display the decimal point.
+`joystick.x()`: Returns the x Position of the JoyStick
+
+`joystick.y()`: Returns the y Position of the JoyStick
+
+`segment.clear()`: Turns off all segments of a segment display to clear any previously displayed number or pattern.
+
+`segment.print(int number, bool point)`: Displays a digit (0-9) on a segment display and optionally a decimal point. The number parameter specifies the digit, and the point parameter indicates whether to display the decimal point.
+
+`segment.manual(int segment, bool state)`: Changes the status of one of the seven (eight with dot) segments manually.
 
 `getButtonState(int number)`: Returns the state (HIGH or LOW) of a specified button. The function handles four buttons, identified by numbers 0 through 3.
+
+`buzzer.xxxxxxx()`: buzzer functions are sound function. You can read the sounds in the table below.
+
+| name                     | description                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| success()                | A charming sound of successfulness                                                   |
+| error()                  | A sound for small errors like a wrong input. Nothing severe.                         |
+| reading()                | A confirmation sound, that something is reading. Maybe helpful for NFC               |
+| understood()             | A complementary sound of the reading sound. Just wonderfull after a hard scan.       |
+| criticalError()          | A sound for BIG errors like a file missing or a non functional code.                 |
+| alarm()                  | A sound for every thief who is just thinking about stealing your nice circuit board. |
+| frequency(int frequency) | A function for you to freely experiment. You can plot your own frequencies.          |
+| stop()                   | Stops the sound party                                                                |
 
 ## Example:
 
