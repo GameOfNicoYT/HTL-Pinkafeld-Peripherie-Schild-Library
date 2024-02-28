@@ -80,7 +80,7 @@ Die RGB-LED kann mit dem Joystick gesteuert werden.
 | Oben         | Weiß        |
 | Unten        | Blau        |
 | Rechts       | Rot         |
-| Linkjs       | Grün        |
+| Links       | Grün        |
 
 ```c++
 #include <Arduino.h>
