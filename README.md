@@ -88,25 +88,27 @@ The RGB LED can be controlled with the Joystick.
 
 peripheralShield shield;
 
+// Function prototypes for better readability
 void joystickRGBHandler();
 void joystickXHandler();
-
 void potiSegmentHandler();
-
 void potiArrayHandler();
+void lightJoystickDirection(int start, int end, int x, int firstThreshold, int secondThreshold, int thirdThreshold, int direction);
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(9600); // Initialize serial communication at 9600 bits per second
 }
 
 void loop()
 {
-
+  // Check switch state and call appropriate handlers
   if (shield.getSwitchState(0) == 1)
   {
     joystickXHandler();
+    // Reset RGB LED before setting new colors
     shield.RGBLED(0, 0, 0);
+    // Set RGB LED based on switch states
     int red = shield.getSwitchState(1);
     int green = shield.getSwitchState(2);
     int blue = shield.getSwitchState(3);
@@ -116,227 +118,157 @@ void loop()
   else
   {
     joystickRGBHandler();
+    // Turn off all LEDs in the array
     for (int i = 0; i < 8; i++)
     {
       shield.lightArray(i, 0);
     }
     potiArrayHandler();
+    // Clear the 7-segment display
     shield.clearSegment();
   }
 }
 
+// Handles the potentiometer input for the 7-segment display
 void potiSegmentHandler()
 {
-
   float poti = shield.getPotiState();
-
+  // Scale potentiometer value to range 0-10
   poti = (poti / 1024) * 10;
-
   poti = floor(poti);
-
-  Serial.println(poti);
-
-  shield.printSegment(poti, 0);
+  shield.printSegment(poti, 0); // Display poti value on 7-segment display
 }
 
+// Handles joystick X-axis movement for the LED array
 void joystickXHandler()
 {
   int x, y;
-  shield.getJoyStickState(&x, &y);
+  shield.getJoyStickState(&x, &y); // Get joystick state
 
+  // Clear LED array before setting new state
   for (int i = 0; i < 8; i++)
   {
     shield.lightArray(i, 0);
   }
 
-  // Joystick in der Mitte
+  // Handle joystick position and light up LEDs accordingly
+  // The joystick handling is divided into regions based on the X-axis value
   if (x > 450 && x < 550)
   {
+    // Joystick in middle position
     shield.lightArray(3, 1);
     shield.lightArray(4, 1);
   }
-  // Bewegung nach rechts (vorher links)
   else if (x <= 450)
   {
-    shield.lightArray(0, 0);
-    shield.lightArray(1, 0);
-    shield.lightArray(2, 0);
-    shield.lightArray(3, 0);
-    shield.lightArray(4, 1);
-    if (x < 337)
-    {
-      shield.lightArray(5, 1);
-    }
-    else
-    {
-      shield.lightArray(5, 0);
-    }
-    if (x < 224)
-    {
-      shield.lightArray(6, 1);
-    }
-    else
-    {
-      shield.lightArray(6, 0);
-    }
-    if (x < 111)
-    {
-      shield.lightArray(7, 1);
-    }
-    else
-    {
-      shield.lightArray(7, 0);
-    }
+    // Joystick moved to the right
+    lightJoystickDirection(4, 7, x, 350, 125, 10, 1);
   }
-  // Bewegung nach links (vorher rechts)
   else if (x >= 550)
   {
-    shield.lightArray(3, 1);
-    shield.lightArray(4, 0);
-    shield.lightArray(5, 0);
-    shield.lightArray(6, 0);
-    shield.lightArray(7, 0);
-    if (x > 669)
-    {
-      shield.lightArray(2, 1);
-    }
-    else
-    {
-      shield.lightArray(2, 0);
-    }
-    if (x > 788)
-    {
-      shield.lightArray(1, 1);
-    }
-    else
-    {
-      shield.lightArray(1, 0);
-    }
-    if (x > 907)
-    {
-      shield.lightArray(0, 1);
-    }
-    else
-    {
-      shield.lightArray(0, 0);
-    }
+    // Joystick moved to the left
+    lightJoystickDirection(0, 3, x, 700, 800, 1000, -1);
   }
 }
 
+// Refactored function to light up LEDs based on joystick direction
+void lightJoystickDirection(int start, int end, int x, int firstThreshold, int secondThreshold, int thirdThreshold, int direction)
+{
+  // Zuerst alle LEDs ausschalten
+  for (int i = start; i <= end; i++)
+  {
+    shield.lightArray(i, 0);
+  }
+
+  Serial.println(x);
+
+  // Bestimme, welche LEDs basierend auf den Schwellenwerten eingeschaltet werden sollen
+  int activeLedCount = 1; // Anzahl der aktiven LEDs basierend auf Joystick-Position
+  if (direction == -1)
+  {
+    if (x > firstThreshold)
+      activeLedCount = 2;
+    if (x > secondThreshold)
+      activeLedCount = 3;
+    if (x > thirdThreshold)
+      activeLedCount = 4;
+  }
+  if (direction == 1)
+  {
+    if (x < firstThreshold)
+      activeLedCount = 2;
+    if (x < secondThreshold)
+      activeLedCount = 3;
+    if (x < thirdThreshold)
+      activeLedCount = 4;
+  }
+  // LEDs basierend auf der Anzahl der aktiven LEDs und der Richtung einschalten
+  for (int i = 0; i < activeLedCount; i++)
+  {
+    int ledIndex;
+    if (direction == -1)
+    {
+      ledIndex = end - i;
+    }
+    if (direction == 1)
+    {
+      ledIndex = start + i;
+    }
+    shield.lightArray(ledIndex, 1);
+  }
+}
+
+// Handles the joystick input to change RGB LED colors
 void joystickRGBHandler()
 {
   int x, y;
-  shield.getJoyStickState(&x, &y);
+  shield.getJoyStickState(&x, &y); // Get joystick state
 
+  // Set RGB LED based on joystick position
   if (x < 400)
   {
-    shield.RGBLED(1, -1, -1);
+    shield.RGBLED(1, -1, -1); // Red
   }
-  else
+  else if (x > 600)
   {
-    shield.RGBLED(0, -1, -1);
-  }
-  if (x > 600)
-  {
-    shield.RGBLED(-1, 1, -1);
-  }
-  else
-  {
-    shield.RGBLED(-1, 0, -1);
+    shield.RGBLED(-1, 1, -1); // Green
   }
   if (y < 400)
   {
-    shield.RGBLED(-1, -1, 1);
+    shield.RGBLED(-1, -1, 1); // Blue
   }
-  else
+  else if (y > 600)
   {
-    shield.RGBLED(-1, -1, 0);
+    shield.RGBLED(1, 1, 1); // White
   }
-  if (y > 600)
-  {
-    shield.RGBLED(1, 1, 1);
-  }
-
   if (y > 400 && x > 400 && y < 600 && x < 600)
   {
-    shield.RGBLED(0, 0, 0);
+    shield.RGBLED(0, 0, 0); // Off
   }
 }
 
+// Handles the potentiometer input for lighting up the LED array
 void potiArrayHandler()
 {
-
   float poti = shield.getPotiState();
-
+  // Scale potentiometer value to range 0-100
   poti = (poti / 1024) * 100;
-
   poti = floor(poti);
 
-  if (poti > 12)
+  // Light up LED array based on poti value thresholds
+  for (int i = 0; i < 8; i++)
   {
-    shield.lightArray(0, 1);
-    if (poti > 24)
+    if (poti > (12 + i * 12))
     {
-      shield.lightArray(1, 1);
-      if (poti > 36)
-      {
-        shield.lightArray(2, 1);
-        if (poti > 48)
-        {
-          shield.lightArray(3, 1);
-          if (poti > 60)
-          {
-            shield.lightArray(4, 1);
-            if (poti > 72)
-            {
-              shield.lightArray(5, 1);
-              if (poti > 84)
-              {
-                shield.lightArray(6, 1);
-                if (poti > 96)
-                {
-                  shield.lightArray(7, 1);
-                }
-                else
-                {
-                  shield.lightArray(7, 0);
-                }
-              }
-              else
-              {
-                shield.lightArray(6, 0);
-              }
-            }
-            else
-            {
-              shield.lightArray(5, 0);
-            }
-          }
-          else
-          {
-            shield.lightArray(4, 0);
-          }
-        }
-        else
-        {
-          shield.lightArray(3, 0);
-        }
-      }
-      else
-      {
-        shield.lightArray(2, 0);
-      }
+      shield.lightArray(i, 1);
     }
     else
     {
-      shield.lightArray(1, 0);
+      shield.lightArray(i, 0);
     }
   }
-  else
-  {
-    shield.lightArray(0, 0);
-  }
 }
+
 ```
 
 This code is a color Picker. You can activate the Red Green and Blue (RGB) Parts of the LED with the left thee switches.
