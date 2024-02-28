@@ -271,7 +271,6 @@ void potiArrayHandler()
 
 ```
 
-This code is a color Picker. You can activate the Red Green and Blue (RGB) Parts of the LED with the left thee switches.
 Dies ist ein color Picker. Du kannst die Rot Grün und Blau (RGB) anteile mit den linken drei Schaltern ein oder aus schalten.
 
 ```c++
