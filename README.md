@@ -182,8 +182,8 @@ void lightJoystickDirection(int start, int end, int x, int firstThreshold, int s
 
   Serial.println(x);
 
-  // Bestimme, welche LEDs basierend auf den Schwellenwerten eingeschaltet werden sollen
-  int activeLedCount = 1; // Anzahl der aktiven LEDs basierend auf Joystick-Position
+  // Decide how many LEDs should be turned on with respect of the threshold
+  int activeLedCount = 1;
   if (direction == -1)
   {
     if (x > firstThreshold)
@@ -202,7 +202,7 @@ void lightJoystickDirection(int start, int end, int x, int firstThreshold, int s
     if (x < thirdThreshold)
       activeLedCount = 4;
   }
-  // LEDs basierend auf der Anzahl der aktiven LEDs und der Richtung einschalten
+  // Activate LEDs with respect to direction
   for (int i = 0; i < activeLedCount; i++)
   {
     int ledIndex;
