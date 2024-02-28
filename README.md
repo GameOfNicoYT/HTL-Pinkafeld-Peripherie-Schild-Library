@@ -67,7 +67,7 @@ The RGB LED can be controlled with the three right switches.
 
 The Segment display can be controlled with the Potentiometer.
 
-### 1. Switch Left = **Down**
+### 2. Switch Left = **Down**
 
 If the left switch is down the Light Array can be controlled with the Potentiometer and the Joystick is for the RGB LED.
 
