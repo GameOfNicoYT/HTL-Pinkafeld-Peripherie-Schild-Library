@@ -76,10 +76,11 @@ The LED array displays the amount the Potentiometer was turned.
 The RGB LED can be controlled with the Joystick.
 
 | **Joystick** | **RGB LED** |
-| Up | White |
-| Down | Blue |
-| Right | Red |
-| Left | Green |
+| ------------ | ----------- |
+| Up           | White       |
+| Down         | Blue        |
+| Right        | Red         |
+| Left         | Green       |
 
 ```c++
 #include <Arduino.h>
