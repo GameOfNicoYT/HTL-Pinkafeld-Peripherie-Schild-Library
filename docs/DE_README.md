@@ -1,86 +1,86 @@
 # Installation
 
-Install the Library via the [release tab](https://github.com/GameOfNicoYT/HTL-Pinkafeld-Peripherie-Schild-Library/releases) on GitHub
+Installiere die Bibliothek über den [Release-Tab](https://github.com/GameOfNicoYT/HTL-Pinkafeld-Peripherie-Schild-Library/releases) auf GitHub
 
-**Installation in the Arduino IDE**
+**Installation in der Arduino IDE**
 
-1. Open the Arduino IDE
-2. Click on `Sketch`, and then on `Include Library`
-3. Click on `Add .ZIP Library`
-4. Finally append the .ZIP file, you just downloaded. And boom, you're done!
+1. Öffne die Arduino IDE
+2. Klicke auf `Sketch` und dann auf `Bibliothek einbinden`
+3. Klicke auf `.ZIP-Bibliothek hinzufügen`
+4. Füge zuletzt die .ZIP-Datei hinzu, die du gerade heruntergeladen hast. Und zack, fertig!
 
-**Installation in Visual Studio Code with Platform IO**
+**Installation in Visual Studio Code mit Platform IO**
 
-1. Open Visual Studio Code
-2. Create a new PlatformIO Project
-3. Open up the src folder of the ZIP file
-4. Extract the .h file into the include Folder of your PlatformIO Project
-5. Extract the .cpp file into the src folder of your PlatformIO Project
+1. Öffne Visual Studio Code
+2. Erstelle ein neues PlatformIO-Projekt
+3. Öffne den src-Ordner der ZIP-Datei
+4. Extrahiere die .h-Datei in den Include-Ordner deines PlatformIO-Projekts
+5. Extrahiere die .cpp-Datei in den src-Ordner deines PlatformIO-Projekts
 
-# Usage
+# Nutzung
 
-Import the library with following command:
+Importiere die Bibliothek mit folgendem Befehl:
 
 ```c++
 #include <peripheralShield.h>
 ```
 
-And add a synonym for peripheralShield like this:
+Und füge ein Synonym für peripheralShield hinzu wie folgt:
 
 ```c++
 peripheralShield shield;
 ```
 
-Now you can get access to all the cool functions of the library with `shield.xxxxx`
+Nun kannst du auf alle coolen Funktionen der Bibliothek mit `shield.xxxxx` zugreifen
 
-## Functions:
+#Funktionen:
 
-`getSwitchState(int number)`: Returns the state (HIGH or LOW) of a specified switch. The function handles four switches, identified by numbers 0 through 3.
+`getSwitchState(int number)`: Gibt den Zustand (HIGH oder LOW) eines bestimmten Schalters zurück. Die Funktion behandelt vier Schalter, die durch Nummern 0 bis 3 identifiziert werden.
 
-`lightArray(int number, bool active)`: Controls an individual light in a light array (bar) by turning it on or off based on the active parameter. The number parameter specifies which light to control.
+`lightArray(int number, bool active)`: Steuert ein einzelnes Licht in einem Lichtarray (Leiste), indem es basierend auf dem aktiven Parameter ein- oder ausgeschaltet wird. Der Parameter number gibt an, welches Licht gesteuert werden soll.
 
-`getLDRState()`: Returns the current analog reading from the light-dependent resistor (LDR), indicating the level of ambient light.
+`getLDRState()`: Gibt den aktuellen analogen Wert des lichtabhängigen Widerstands (LDR) zurück, der das Niveau des Umgebungslichts anzeigt.
 
-`getPotiState()`: Returns the current analog reading from the potentiometer, reflecting its rotational position.
+`getPotiState()`: Gibt den aktuellen analogen Wert des Potentiometers zurück, der seine Drehposition widerspiegelt.
 
-`RGBLED(int red, int green, int blue)`: Sets the color of the RGB LED by controlling the intensity of red, green, and blue components. The parameters are binary (0 or 1), indicating off or on for each color component.
+`RGBLED(int red, int green, int blue)`: Legt die Farbe der RGB-LED fest, indem die Intensität der Rot-, Grün- und Blaukomponenten gesteuert wird. Die Parameter sind binär (0 oder 1) und geben an, ob jede Farbkomponente aus- oder eingeschaltet ist.
 
-`getJoyStickState(int *x, int *y)`: Reads the current position of the joystick and returns the x and y coordinates through pointer arguments.
+`getJoyStickState(int *x, int *y)`: Liest die aktuelle Position des Joysticks und gibt die x- und y-Koordinaten über Zeigerargumente zurück.
 
-`clearSegment()`: Turns off all segments of a segment display to clear any previously displayed number or pattern.
+`clearSegment()`: Schaltet alle Segmente einer Segmentanzeige aus, um eine zuvor angezeigte Zahl oder ein Muster zu löschen.
 
-`printSegment(int number, bool point)`: Displays a digit (0-9) on a segment display and optionally a decimal point. The number parameter specifies the digit, and the point parameter indicates whether to display the decimal point.
+`printSegment(int number, bool point)`: Zeigt eine Ziffer (0-9) auf einer Segmentanzeige an und optional einen Dezimalpunkt. Der Parameter number gibt die Ziffer an, und der Parameter point gibt an, ob der Dezimalpunkt angezeigt werden soll.
 
-`getButtonState(int number)`: Returns the state (HIGH or LOW) of a specified button. The function handles four buttons, identified by numbers 0 through 3.
+`getButtonState(int number)`: Gibt den Zustand (HIGH oder LOW) eines bestimmten Knopfes zurück. Die Funktion behandelt vier Knöpfe, die durch Nummern 0 bis 3 identifiziert werden.
 
-## Example:
+## Beispiel:
 
-This is a example of nearly anything that the board can display. The switch on the left side is for the mode.
+Dies ist ein Beispiel für fast alles, was das Board anzeigen kann. Der Schalter auf der linken Seite ist für den Modus.
 
-### 1. Switch Left = **Up**
+### 1. Schalter links = **Oben**
 
-If the left switch is up you can control the segment display with the Potentiometer and the led array with the Joystick as well as the segment display with the Potentiometer.
+Wenn der linke Schalter oben ist, kannst du das Segmentdisplay mit dem Potentiometer und das LED-Array mit dem Joystick sowie das Segmentdisplay mit dem Potentiometer steuern.
 
-The LED array displays the x direction of the Joystick.
+Das LED-Array zeigt die x-Richtung des Joysticks an.
 
-The RGB LED can be controlled with the three right switches.
+Die RGB-LED kann mit den drei rechten Schaltern gesteuert werden.
 
-The Segment display can be controlled with the Potentiometer.
+Das Segmentdisplay kann mit dem Potentiometer gesteuert werden.
 
-### 2. Switch Left = **Down**
+### 2. Schalter links = **Unten**
 
-If the left switch is down the Light Array can be controlled with the Potentiometer and the Joystick is for the RGB LED.
+Wenn der linke Schalter unten ist, kann das Lichtarray mit dem Potentiometer gesteuert werden und der Joystick ist für die RGB-LED.
 
-The LED array displays the amount the Potentiometer was turned.
+Das LED-Array zeigt die Drehung des Potentiometers an.
 
-The RGB LED can be controlled with the Joystick.
+Die RGB-LED kann mit dem Joystick gesteuert werden.
 
 | **Joystick** | **RGB LED** |
 | ------------ | ----------- |
-| Up           | White       |
-| Down         | Blue        |
-| Right        | Red         |
-| Left         | Green       |
+| Oben         | Weiß        |
+| Unten        | Blau        |
+| Rechts       | Rot         |
+| Linkjs       | Grün        |
 
 ```c++
 #include <Arduino.h>
@@ -272,6 +272,7 @@ void potiArrayHandler()
 ```
 
 This code is a color Picker. You can activate the Red Green and Blue (RGB) Parts of the LED with the left thee switches.
+Dies ist ein color Picker. Du kannst die Rot Grün und Blau (RGB) anteile mit den linken drei Schaltern ein oder aus schalten.
 
 ```c++
 #include <Arduino.h>
