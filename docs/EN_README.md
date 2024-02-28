@@ -83,6 +83,7 @@ The RGB LED can be controlled with the Joystick.
 | Left         | Green       |
 
 ```c++
+
 #include <Arduino.h>
 #include <peripheralShield.h>
 
@@ -93,7 +94,7 @@ void joystickRGBHandler();
 void joystickXHandler();
 void potiSegmentHandler();
 void potiArrayHandler();
-void lightJoystickDirection(int start, int end, int x, int firstThreshold, int secondThreshold, int thirdThreshold, int direction);
+void lightJoystickDirection(int start, int end, int x, int direction);
 
 void setup()
 {
@@ -102,17 +103,57 @@ void setup()
 
 void loop()
 {
+
+  if (shield.getSwitchState(0))
+  {
+    if (shield.getButtonState(0) == 0)
+    {
+      shield.buzzer.alarm();
+    }
+    if (shield.getButtonState(1) == 0)
+    {
+      shield.buzzer.success();
+    }
+    if (shield.getButtonState(2) == 0)
+    {
+      shield.buzzer.error();
+    }
+    if (shield.getButtonState(3) == 0)
+    {
+      shield.buzzer.criticalError();
+    }
+  }
+  else
+  {
+    if (shield.getButtonState(0) == 0)
+    {
+      shield.buzzer.reading();
+    }
+    if (shield.getButtonState(1) == 0)
+    {
+      shield.buzzer.understood();
+    }
+    if (shield.getButtonState(2) == 0)
+    {
+      shield.buzzer.frequency(2000);
+    }
+    if (shield.getButtonState(3) == 0)
+    {
+      shield.buzzer.stop();
+    }
+  }
+
   // Check switch state and call appropriate handlers
   if (shield.getSwitchState(0) == 1)
   {
     joystickXHandler();
     // Reset RGB LED before setting new colors
-    shield.RGBLED(0, 0, 0);
+    shield.led.rgb(0, 0, 0);
     // Set RGB LED based on switch states
-    int red = shield.getSwitchState(1);
-    int green = shield.getSwitchState(2);
-    int blue = shield.getSwitchState(3);
-    shield.RGBLED(red, green, blue);
+    int red = shield.getSwitchState(1) == HIGH ? 255 : 0;
+    int green = shield.getSwitchState(2) == HIGH ? 255 : 0;
+    int blue = shield.getSwitchState(3) == HIGH ? 255 : 0;
+    shield.led.rgb(red, green, blue);
     potiSegmentHandler();
   }
   else
@@ -125,7 +166,7 @@ void loop()
     }
     potiArrayHandler();
     // Clear the 7-segment display
-    shield.clearSegment();
+    shield.segment.clear();
   }
 }
 
@@ -136,14 +177,16 @@ void potiSegmentHandler()
   // Scale potentiometer value to range 0-10
   poti = (poti / 1024) * 10;
   poti = floor(poti);
-  shield.printSegment(poti, 0); // Display poti value on 7-segment display
+  shield.segment.print(poti, 0); // Display poti value on 7-segment display
 }
 
 // Handles joystick X-axis movement for the LED array
+bool activeBlink = false;
+unsigned long previousMillis = 0;
 void joystickXHandler()
 {
   int x, y;
-  shield.getJoyStickState(&x, &y); // Get joystick state
+  shield.joystick.getRaw(&x, &y); // Get joystick state
 
   // Clear LED array before setting new state
   for (int i = 0; i < 8; i++)
@@ -151,30 +194,40 @@ void joystickXHandler()
     shield.lightArray(i, 0);
   }
 
+  int blinkFactor = map(y, 1024, 0, 100, 500);
+
+  unsigned long interval = blinkFactor;
+  unsigned long currentMillis = millis();
+
   // Handle joystick position and light up LEDs accordingly
   // The joystick handling is divided into regions based on the X-axis value
+
   if (x > 450 && x < 550)
   {
-    // Joystick in middle position
-    shield.lightArray(3, 1);
-    shield.lightArray(4, 1);
+    if (currentMillis - previousMillis >= interval)
+    {
+      previousMillis = currentMillis;
+      activeBlink = !activeBlink;
+    }
+
+    shield.lightArray(3, activeBlink ? 1 : 0);
+    shield.lightArray(4, activeBlink ? 1 : 0);
   }
   else if (x <= 450)
   {
     // Joystick moved to the right
-    lightJoystickDirection(4, 7, x, 350, 125, 10, 1);
+    lightJoystickDirection(4, 7, x, 1);
   }
   else if (x >= 550)
   {
     // Joystick moved to the left
-    lightJoystickDirection(0, 3, x, 700, 800, 1000, -1);
+    lightJoystickDirection(0, 3, x, -1);
   }
 }
 
 // Refactored function to light up LEDs based on joystick direction
-void lightJoystickDirection(int start, int end, int x, int firstThreshold, int secondThreshold, int thirdThreshold, int direction)
+void lightJoystickDirection(int start, int end, int x, int direction)
 {
-  // Zuerst alle LEDs ausschalten
   for (int i = start; i <= end; i++)
   {
     shield.lightArray(i, 0);
@@ -182,27 +235,16 @@ void lightJoystickDirection(int start, int end, int x, int firstThreshold, int s
 
   Serial.println(x);
 
-  // Decide how many LEDs should be turned on with respect of the threshold
-  int activeLedCount = 1;
+  int activeLedCount;
   if (direction == -1)
   {
-    if (x > firstThreshold)
-      activeLedCount = 2;
-    if (x > secondThreshold)
-      activeLedCount = 3;
-    if (x > thirdThreshold)
-      activeLedCount = 4;
+    activeLedCount = map(x, 550, 1020, 1, 4);
   }
   if (direction == 1)
   {
-    if (x < firstThreshold)
-      activeLedCount = 2;
-    if (x < secondThreshold)
-      activeLedCount = 3;
-    if (x < thirdThreshold)
-      activeLedCount = 4;
+    activeLedCount = map(x, 450, 4, 1, 4);
   }
-  // Activate LEDs with respect to direction
+
   for (int i = 0; i < activeLedCount; i++)
   {
     int ledIndex;
@@ -222,28 +264,34 @@ void lightJoystickDirection(int start, int end, int x, int firstThreshold, int s
 void joystickRGBHandler()
 {
   int x, y;
-  shield.getJoyStickState(&x, &y); // Get joystick state
+  shield.joystick.getRaw(&x, &y); // Get joystick state
+
+  shield.led.rgb(0, 0, 0);
+
+  Serial.print(x);
+  Serial.print(" | ");
+  Serial.println(y);
 
   // Set RGB LED based on joystick position
   if (x < 400)
   {
-    shield.RGBLED(1, -1, -1); // Red
+    shield.led.rgb(255, -1, -1); // Red
   }
   else if (x > 600)
   {
-    shield.RGBLED(-1, 1, -1); // Green
+    shield.led.rgb(-1, 255, -1); // Green
   }
   if (y < 400)
   {
-    shield.RGBLED(-1, -1, 1); // Blue
+    shield.led.rgb(-1, -1, 255); // Blue
   }
   else if (y > 600)
   {
-    shield.RGBLED(1, 1, 1); // White
+    shield.led.rgb(255, 255, 255); // White
   }
   if (y > 400 && x > 400 && y < 600 && x < 600)
   {
-    shield.RGBLED(0, 0, 0); // Off
+    shield.led.rgb(0, 0, 0); // Off
   }
 }
 
@@ -268,6 +316,7 @@ void potiArrayHandler()
     }
   }
 }
+
 
 ```
 

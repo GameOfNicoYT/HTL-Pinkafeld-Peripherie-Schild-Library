@@ -22,24 +22,63 @@ Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-13
 
 #include <Arduino.h>
 
+class Led
+{
+public:
+  void rgb(int red, int green, int blue);
+  void hex(unsigned long hex);
+};
+
+class Buzzer
+{
+public:
+  void success();
+  void error();
+  void reading();
+  void understood();
+  void criticalError();
+  void alarm();
+  void frequency(unsigned const int frequency);
+  void stop();
+};
+
+class JoyStick
+{
+public:
+  void getRaw(int *x, int *y);
+  int x();
+  int y();
+};
+
+class Segment
+{
+public:
+  void clear();
+  void print(const int number, const bool point);
+  void manual(const int segment, const bool state);
+
+private:
+  const int segmentsNumber = 8;
+  int segmentArray[8] = {30, 31, 32, 33, 34, 35, 36, 37};
+};
+
 class peripheralShield
 {
 public:
   peripheralShield(); // Konstruktor
-  void initShield();
   void lightArray(const int number, const bool active);
   int getButtonState(const int number);
   int getSwitchState(const int number);
-  int printSegment(const int number, const bool point);
-  void clearSegment();
   int getLDRState();
   int getPotiState();
-  void getJoyStickState(int *x, int *y);
-  void RGBLED(int red, int green, int blue);
+  Buzzer buzzer;
+  JoyStick joystick;
+  Segment segment;
+  Led led;
 
 private:
-  const int segments = 8;
-  int segment[8] = {30, 31, 32, 33, 34, 35, 36, 37};
+  const int segmentsNumber = 8;
+  int segmentArray[8] = {30, 31, 32, 33, 34, 35, 36, 37};
   int lightBar[8] = {22, 23, 24, 25, 26, 27, 28, 29};
 };
 
