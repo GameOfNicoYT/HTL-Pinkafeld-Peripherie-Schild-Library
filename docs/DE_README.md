@@ -108,6 +108,9 @@ Die RGB-LED kann mit dem Joystick gesteuert werden.
 #include <Arduino.h>
 #include <peripheralShield.h>
 
+#define soundOn true
+#define debug true
+
 peripheralShield shield;
 
 // Function prototypes for better readability
@@ -125,6 +128,7 @@ void setup()
 void loop()
 {
 
+#if soundOn
   if (shield.getSwitchState(0))
   {
     if (shield.getButtonState(0) == 0)
@@ -146,7 +150,7 @@ void loop()
   }
   else
   {
-    if (shield.getButtonState(0) == 0)
+    if (!shield.getButtonState(0))
     {
       shield.buzzer.reading();
     }
@@ -163,6 +167,7 @@ void loop()
       shield.buzzer.stop();
     }
   }
+#endif
 
   // Check switch state and call appropriate handlers
   if (shield.getSwitchState(0) == 1)
@@ -183,7 +188,7 @@ void loop()
     // Turn off all LEDs in the array
     for (int i = 0; i < 8; i++)
     {
-      shield.lightArray(i, 0);
+      shield.lightarray.manual(i, 0);
     }
     potiArrayHandler();
     // Clear the 7-segment display
@@ -194,7 +199,7 @@ void loop()
 // Handles the potentiometer input for the 7-segment display
 void potiSegmentHandler()
 {
-  float poti = shield.getPotiState();
+  float poti = shield.poti.getData();
   // Scale potentiometer value to range 0-10
   poti = (poti / 1024) * 10;
   poti = floor(poti);
@@ -212,7 +217,7 @@ void joystickXHandler()
   // Clear LED array before setting new state
   for (int i = 0; i < 8; i++)
   {
-    shield.lightArray(i, 0);
+    shield.lightarray.manual(i, 0);
   }
 
   int blinkFactor = map(y, 1024, 0, 100, 500);
@@ -231,8 +236,8 @@ void joystickXHandler()
       activeBlink = !activeBlink;
     }
 
-    shield.lightArray(3, activeBlink ? 1 : 0);
-    shield.lightArray(4, activeBlink ? 1 : 0);
+    shield.lightarray.manual(3, activeBlink ? 1 : 0);
+    shield.lightarray.manual(4, activeBlink ? 1 : 0);
   }
   else if (x <= 450)
   {
@@ -251,10 +256,12 @@ void lightJoystickDirection(int start, int end, int x, int direction)
 {
   for (int i = start; i <= end; i++)
   {
-    shield.lightArray(i, 0);
+    shield.lightarray.manual(i, 0);
   }
 
+#if debug
   Serial.println(x);
+#endif
 
   int activeLedCount;
   if (direction == -1)
@@ -277,7 +284,7 @@ void lightJoystickDirection(int start, int end, int x, int direction)
     {
       ledIndex = start + i;
     }
-    shield.lightArray(ledIndex, 1);
+    shield.lightarray.manual(ledIndex, 1);
   }
 }
 
@@ -289,9 +296,11 @@ void joystickRGBHandler()
 
   shield.led.rgb(0, 0, 0);
 
+#if debug
   Serial.print(x);
   Serial.print(" | ");
   Serial.println(y);
+#endif
 
   // Set RGB LED based on joystick position
   if (x < 400)
@@ -319,7 +328,7 @@ void joystickRGBHandler()
 // Handles the potentiometer input for lighting up the LED array
 void potiArrayHandler()
 {
-  float poti = shield.getPotiState();
+  float poti = shield.poti.getData();
   // Scale potentiometer value to range 0-100
   poti = (poti / 1024) * 100;
   poti = floor(poti);
@@ -329,14 +338,15 @@ void potiArrayHandler()
   {
     if (poti > (12 + i * 12))
     {
-      shield.lightArray(i, 1);
+      shield.lightarray.manual(i, 1);
     }
     else
     {
-      shield.lightArray(i, 0);
+      shield.lightarray.manual(i, 0);
     }
   }
 }
+
 
 
 ```
