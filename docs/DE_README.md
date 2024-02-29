@@ -37,11 +37,11 @@ Nun kannst du auf alle coolen Funktionen der Bibliothek mit `shield.xxxxx` zugre
 
 `getSwitchState(int number)`: Gibt den Zustand (HIGH oder LOW) eines bestimmten Schalters zurück. Die Funktion behandelt vier Schalter, die durch Nummern 0 bis 3 identifiziert werden.
 
-`lightArray(int number, bool active)`: Steuert ein einzelnes Licht in einem Lichtarray (Leiste), indem es basierend auf dem aktiven Parameter ein- oder ausgeschaltet wird. Der Parameter number gibt an, welches Licht gesteuert werden soll.
+`lightArray.manual(int number, bool active)`: Steuert ein einzelnes Licht in einem Lichtarray (Leiste), indem es basierend auf dem aktiven Parameter ein- oder ausgeschaltet wird. Der Parameter number gibt an, welches Licht gesteuert werden soll.
 
-`getLDRState()`: Gibt den aktuellen analogen Wert des lichtabhängigen Widerstands (LDR) zurück, der das Niveau des Umgebungslichts anzeigt.
+`ldr.getData()`: Gibt den aktuellen analogen Wert des lichtabhängigen Widerstands (LDR) zurück, der das Niveau des Umgebungslichts anzeigt.
 
-`getPotiState()`: Gibt den aktuellen analogen Wert des Potentiometers zurück, der seine Drehposition widerspiegelt.
+`poti.getData()`: Gibt den aktuellen analogen Wert des Potentiometers zurück, der seine Drehposition widerspiegelt.
 
 `led.rgb(int red, int green, int blue)`: Legt die Farbe der RGB-LED fest, indem die Intensität der Rot-, Grün- und Blaukomponenten gesteuert wird. Die Parameter sind integers (0 bis 255).
 

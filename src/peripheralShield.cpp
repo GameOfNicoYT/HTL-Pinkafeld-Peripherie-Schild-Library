@@ -57,7 +57,7 @@ peripheralShield::peripheralShield()
     for (int i = 0; i < 8; i++)
     {
         pinMode(lightBar[i], OUTPUT);
-        lightArray(i, false);
+        lightarray.manual(i, false);
     }
 
     for (int i = 0; i < segmentsNumber; i++)
@@ -86,19 +86,20 @@ int peripheralShield::getSwitchState(const int number)
     return -1;
 }
 
-void peripheralShield::lightArray(const int number, const bool active)
+
+void LightArray::manual(const int number, const bool active)
 {
     int light = 7 - number;
 
     digitalWrite(lightBar[light], active ? LOW : HIGH);
 }
 
-int peripheralShield::getLDRState()
+int LDR::getData()
 {
     return analogRead(A8);
 }
 
-int peripheralShield::getPotiState()
+int Poti::getData()
 {
     return analogRead(A4);
 }
