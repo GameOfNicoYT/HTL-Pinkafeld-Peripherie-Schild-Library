@@ -33,7 +33,7 @@ peripheralShield shield;
 
 Nun kannst du auf alle coolen Funktionen der Bibliothek mit `shield.xxxxx` zugreifen
 
-#Funktionen:
+# Funktionen:
 
 `getSwitchState(int number)`: Gibt den Zustand (HIGH oder LOW) eines bestimmten Schalters zurück. Die Funktion behandelt vier Schalter, die durch Nummern 0 bis 3 identifiziert werden.
 
