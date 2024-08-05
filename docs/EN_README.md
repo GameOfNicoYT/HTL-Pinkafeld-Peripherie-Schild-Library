@@ -1,6 +1,6 @@
 # Installation
 
-Install the Library via the [release tab](https://github.com/GameOfNicoYT/HTL-Pinkafeld-Peripherie-Schild-Library/releases) on GitHub
+Download the Library via the [release tab](https://github.com/GameOfNicoYT/HTL-Pinkafeld-Peripherie-Schild-Library/releases) on GitHub
 
 **Installation in the Arduino IDE**
 
