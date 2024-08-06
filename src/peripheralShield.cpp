@@ -86,12 +86,27 @@ int peripheralShield::getSwitchState(const int number)
     return -1;
 }
 
-
 void LightArray::manual(const int number, const bool active)
 {
     int light = 7 - number;
 
     digitalWrite(lightBar[light], active ? LOW : HIGH);
+}
+void LightArray::nightRider(const bool reverse, const int time, const int repeat)
+{
+    for (int i = 0; i < repeat; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            digitalWrite(lightBar[j], HIGH);
+
+            if (j > 2)
+            {
+                digitalWrite(lightBar[j - 2], Low);
+            }
+            delay((int)(time / 8));
+        }
+    }
 }
 
 int LDR::getData()

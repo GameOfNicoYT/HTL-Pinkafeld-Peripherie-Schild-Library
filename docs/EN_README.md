@@ -39,6 +39,8 @@ Now you can get access to all the cool functions of the library with `shield.xxx
 
 `lightArray.manual(int number, bool active)`: Controls an individual light in a light array (bar) by turning it on or off based on the active parameter. The number parameter specifies which light to control.
 
+`lightArray.nightRider( int time, int repeat)`: Creates a NightRider effect, where the lights swoosh from left to right and reverse. The number of revision can be defined, as well as the time one revision takes.
+
 `ldr.getData()`: Returns the current analog reading from the light-dependent resistor (LDR), indicating the level of ambient light.
 
 `poti.getData()`: Returns the current analog reading from the potentiometer, reflecting its rotational position.

@@ -78,6 +78,7 @@ class LightArray
 {
 public:
   void manual(const int number, const bool active);
+  void nightRider(const bool reverse, const int time, const int repeat);
 
 private:
   int lightBar[8] = {22, 23, 24, 25, 26, 27, 28, 29};

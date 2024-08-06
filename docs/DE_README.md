@@ -39,6 +39,8 @@ Nun kannst du auf alle coolen Funktionen der Bibliothek mit `shield.xxxxx` zugre
 
 `lightArray.manual(int number, bool active)`: Steuert ein einzelnes Licht in einem Lichtarray (Leiste), indem es basierend auf dem aktiven Parameter ein- oder ausgeschaltet wird. Der Parameter number gibt an, welches Licht gesteuert werden soll.
 
+`lightArray.nightRider( int time, int repeat)`: Macht einen Nightrider effekt, der das Licht von links nach rechts gehen lässt (und retour). Die Anzahl der Wiederholungen kann festgelegt werden, als auch die Zeit wie lange eine Wiederholung dauert.
+
 `ldr.getData()`: Gibt den aktuellen analogen Wert des lichtabhängigen Widerstands (LDR) zurück, der das Niveau des Umgebungslichts anzeigt.
 
 `poti.getData()`: Gibt den aktuellen analogen Wert des Potentiometers zurück, der seine Drehposition widerspiegelt.
